@@ -1,4 +1,3 @@
-from datetime import datetime
 from io import BytesIO
 import io
 from flask import Flask, Response, jsonify, request
@@ -201,7 +200,7 @@ def grafico_carico(id_treno):
 
     ax.bar(times, masses, width=width, color='#ff7f0e', align='center', label='Tonnellate')
     ax.grid(True, linestyle='--', alpha=0.6, axis='y')
-    ax.set_ylabel('Massa (Tonnellate)', fontsize=12)
+    ax.set_ylabel('Carico (Tonnellate)', fontsize=12)
     ax.set_ylim(bottom=0)
     ax.xaxis.set_major_formatter(DateFormatter(date_fmt))
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
