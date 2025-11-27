@@ -193,8 +193,23 @@ def grafico_carico(id_treno):
     ax = fig.subplots()
 
     if len(times) > 1:
-        total_days = (times[-1] - times[0]).total_seconds() / 86400
-        width = (total_days / len(times)) * 0.8
+        # 1. Convert python datetimes to matplotlib float dates (days)
+        times_num = mdates.date2num(times)
+        
+        # 2. Calculate the difference between consecutive timestamps
+        # (This assumes 'times' is already sorted from the SQL query)
+        diffs = [times_num[i+1] - times_num[i] for i in range(len(times_num)-1)]
+        
+        # 3. Filter out zero differences (if duplicate timestamps exist)
+        diffs = [d for d in diffs if d > 0]
+        
+        if diffs:
+            min_diff = min(diffs)
+            # Set width to 80% of the smallest gap found
+            width = min_diff * 0.8 
+        else:
+            # Fallback if all timestamps are identical
+            width = 0.01 
     else:
         width = 0.01
 
