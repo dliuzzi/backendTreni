@@ -46,11 +46,11 @@ def medie():
     conn, cursor = get_db_connection()
     try:
         # Prima query
-        cursor.execute("SELECT AVG(velocita) AS media_velocita, SUM(consumo_energetico) as totale_consumo, MAX(massa_sollevata) as massimo_massa FROM rilevazioni_treni")
+        cursor.execute("SELECT AVG(velocita) AS media_velocita, SUM(consumo_energetico) as totale_consumo, MAX(carico) as massimo_massa FROM rilevazioni_treni")
         dati = cursor.fetchone()
 
         # Seconda query (ora sicura grazie a buffered=True e connessione isolata)
-        cursor.execute("SELECT COUNT(*) as numero_anomalie FROM rilevazioni_treni WHERE velocita > 200 OR consumo_energetico > 5000 OR massa_sollevata > 10000")
+        cursor.execute("SELECT COUNT(*) as numero_anomalie FROM rilevazioni_treni WHERE velocita > 200 OR consumo_energetico > 5000 OR carico > 10000")
         anomalie = cursor.fetchone()
         
         return jsonify({
@@ -176,7 +176,7 @@ def grafico_carico(id_treno):
 
     conn, cursor = get_db_connection()
     try:
-        query = f"SELECT timestamp, massa_sollevata FROM rilevazioni_treni WHERE treno_id = %s {filtro_tempo} ORDER BY timestamp"
+        query = f"SELECT timestamp, carico FROM rilevazioni_treni WHERE treno_id = %s {filtro_tempo} ORDER BY timestamp"
         cursor.execute(query, (id_treno,))
         dati = cursor.fetchall()
     finally:
@@ -187,7 +187,7 @@ def grafico_carico(id_treno):
         return "Nessun dato trovato.", 404
 
     times = [row['timestamp'] for row in dati]
-    masses = [row['massa_sollevata'] for row in dati]
+    masses = [row['carico'] for row in dati]
 
     fig = Figure(figsize=(10, 6), dpi=100)
     ax = fig.subplots()
