@@ -1,7 +1,6 @@
 Flask
 matplotlib
 mysql-connector-python
-seaborn
 pandas
 openpyxl
 Flask-Cors
